@@ -49,7 +49,7 @@ function App() {
   return (
     <> 
     <BrowserRouter>
-     <Navbar/>
+     <Navbar Products={data} />
       <Routes>
       <Route path="/" element={<Home Products={data} />}/>
       <Route path="/shop" element={<Shop title="All Categories" products={filteredProducts} setSelectedCategory={setSelectedCategory} />} />
