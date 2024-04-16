@@ -49,14 +49,12 @@ function Navbar({Products}) {
               <span className="text-blue-500 font-bold hidden sm:block">BigDeal</span>
             </div>
             <div className=" md:flex items-center sm:ms-8">
-              {/* <Search
+              <Search
                 placeholder="Search Products...."
                 allowClear
                 size="medium"
                 onChange={filter}
-                defaultValue="adhas"
-              /> */}
-              <input type="text" onChange={filter} value={selectData} />
+              />
               {
               <ul className=' absolute top-[44px] bg-gray-300 shadow-lg w-[200px] rounded-md  max-h-[300px] overflow-y-scroll '>
                 {
