@@ -1,49 +1,55 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiCart } from 'react-icons/bi'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from '../../Redux/cartSlice';
+import { FaRegStar, FaStar } from 'react-icons/fa';
+import { Link, useParams } from 'react-router-dom';
+import { selectProductByCatagory } from '../../Redux/productsSlice';
 
-function Shop({ title, products, setSelectedCategory }) {
-
+function Shop() {
+  const { productCategory } = useParams();
   const dispatch = useDispatch();
+  let product = useSelector(state => selectProductByCatagory(state, productCategory)); 
 
-  useEffect(() => {
-    setSelectedCategory(title === 'All Categories' ? '' : title.toLowerCase());
-  }, [title, setSelectedCategory]);
+
+ 
+ 
   return (
    
     <>
     <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 grid-cols-1 gap-4 my-8 mx-4" >
         {
-          products.map((items, index) => {
+          product.map((items, index) => {
             return (
-              <div className="max-w-sm w-full mx-auto" key={index}>
-                <div className="bg-white hover:shadow-md shadow-sm  rounded-lg overflow-hidden p-2 flex sm:block">
-                  <img className="sm:w-full w-[150px] sm:h-48 h-[150px] object-fit" src={items.image} alt={items.title} />
-                  <div className="p-6">
-                    <h2 className="text-lg font-semibold text-gray-800">{(items.title).substr(0, 12)}</h2>
-                    <p className="mt-2 text-gray-600">{(items.description).substr(0, 12)}</p>
-                    <div className='flex mt-4 gap-3'>
-
-                      <button
-                        className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                      >
-                        Buy Now
-                      </button>
-                      <button
-                        className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
-                        onClick={() => dispatch(addToCart(items))}
-                      >
-                        <BiCart size={30} />
-                      </button>
+              <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" key={items.id}>
+                  <Link to="/product" className='flex justify-center'>
+                    <img className="p-8 rounded-t-lg w-48 h-48" src={items.image} alt={items.title} />
+                  </Link>
+                  <div className="px-5 pb-5">
+                    <a href="">
+                      <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{items.title.length > 23 ? (items.title).substr(0, 23) + "..." : (items.title)}</h5>
+                    </a>
+                    <div className="flex items-center mt-2.5 mb-5">
+                      <div className="flex items-center space-x-1 rtl:space-x-reverse">
+                        <FaStar className="text-yellow-300" />
+                        <FaStar className="text-yellow-300" />
+                        <FaStar className="text-yellow-300" />
+                        <FaStar className="text-yellow-300" />
+                        <FaRegStar />
+                      </div>
+                      <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">5.0</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xl font-bold text-gray-900 dark:text-white">{items.price}$</span>
+                      <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => dispatch(addToCart(items))}>Add to cart</button>
                     </div>
                   </div>
                 </div>
-              </div>
+
             )
           })
         }
-      </div>
+    </div>
     </>
    
   )

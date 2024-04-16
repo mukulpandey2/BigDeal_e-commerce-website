@@ -9,58 +9,51 @@ import Login from './components/pages/Login'
 import SignUp from './components/pages/SignUp'
 import Cart from './components/pages/Cart'
 import Shop from './components/pages/Shop'
+import Product from './components/pages/Product'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchProducts, selectProducts } from './Redux/productsSlice'
+import Footer from './components/footer/Footer'
 
 
 
 function App() {
-  const [data, setData] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
 
-    
-  useEffect(() => {
+  const dispatch = useDispatch();
+  const products = useSelector(selectProducts);
   
-    const apiUrl = 'https://fakestoreapi.com/products';
-    const fetchDataByAllCategories = async () => {
-        try {
-            
-            const response = await axios.get(apiUrl);
-          setData(response.data)
-            
-           
-        } catch (error) {
-            // Handle errors
-            console.error('Error fetching data:', error);
-          }
-      } 
-      fetchDataByAllCategories();
-    }, []);
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
+  // const [filteredProducts, setFilteredProducts] = useState([]);
+  // const [selectedCategory, setSelectedCategory] = useState('');
 
-    useEffect(() => {
-      if (selectedCategory === '') {
-        setFilteredProducts(data);
-      } else {
-        const filtered = data.filter(data => data.category === selectedCategory);
-        setFilteredProducts(filtered);
-      }
-    }, [selectedCategory, data]);
+  //   useEffect(() => {
+  //     if (selectedCategory === '') {
+  //       setFilteredProducts(products);
+  //     } else {
+  //       const filtered = products.filter(data => data.category === selectedCategory);
+  //       setFilteredProducts(filtered);
+  //     }
+  //   }, [selectedCategory, products]);
    
   return (
     <> 
     <BrowserRouter>
-     <Navbar Products={data} />
+     <Navbar/>
       <Routes>
-      <Route path="/" element={<Home Products={data} />}/>
-      <Route path="/shop" element={<Shop title="All Categories" products={filteredProducts} setSelectedCategory={setSelectedCategory} />} />
-      <Route path="/men's" element={<Shop title="men's clothing" products={filteredProducts} setSelectedCategory={setSelectedCategory} />} />
-      <Route path="/women's" element={<Shop title="women's clothing" products={filteredProducts} setSelectedCategory={setSelectedCategory} /> } />
-      <Route path="/jewelery" element={<Shop title="jewelery" products={filteredProducts} setSelectedCategory={setSelectedCategory} />} />
-      <Route path="/electronics" element={<Shop title="electronics" products={filteredProducts} setSelectedCategory={setSelectedCategory} />}/> 
+      <Route path="/" element={<Home />}/>
+      <Route path="/products/:productId" element={<Product/>}/>
+      <Route path="/shop/:productCategory" element={<Shop />} />
+      <Route path="/men's/:productCategory" element={<Shop />} />
+      <Route path="/women's/:productCategory" element={<Shop/> }/>
+      <Route path="/jewelery/:productCategory" element={<Shop/>} />
+      <Route path="/electronics/:productCategory" element={<Shop/>}/> 
       <Route path="/login" element={<Login />} /> 
       <Route path="/signup" element={<SignUp />} /> 
       <Route path="/cart" element={<Cart />} /> 
       </Routes>
+      <Footer/>
       </BrowserRouter>
     </>
   )
